@@ -6,7 +6,7 @@ const { response } = require('express')
 exports.signup = async (req, res) => {
     try {
         //Código para registrarse 
-        const { email, password } = req.body
+        const { email, password, id } = req.body
         const existinguser = await findUserByEmail(email)
         if (existinguser.success) {
             return res.status(400).json({
@@ -18,7 +18,8 @@ exports.signup = async (req, res) => {
 
         const newUser = {
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            id: id
             //agregar otros campos 
         }
 
@@ -53,7 +54,7 @@ exports.login = async (req, res) => {
         const user = findEmail.user
         const findPassword = await bcrypt.compare(password, user.password)
 
-        if (!findPassword.success) {
+        if (!findPassword) {
             res.status(401).json({
                 message: ' Incorrect password '
             })
